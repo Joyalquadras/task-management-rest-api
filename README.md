@@ -1,137 +1,215 @@
 # 📝 Task Management REST API
 
-A production-ready **RESTful API** built with **Node.js**, **Express**, and **MongoDB** featuring JWT authentication, user-specific task isolation, and full CRUD operations.
+A production-ready **RESTful API** built using **Node.js**, **Express.js**, and **MongoDB** featuring secure JWT authentication, role-based authorization, login tracking, and complete task management functionality.
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-- 🔐 **JWT Authentication** — Secure token-based login with 7-day expiry
-- 👤 **User Registration & Login** — Bcrypt password hashing with validation
-- ✅ **Full Task CRUD** — Create, Read, Update, Delete tasks
-- 🔒 **User-Scoped Tasks** — Each user can only access their own tasks
-- 🧩 **Input Validation** — Schema-based request validation using `express-validator`
-- 🌐 **CORS Enabled** — Ready for frontend integration
-- 🗄️ **MongoDB with Mongoose** — Clean schema design with enums for status and priority
+## 🔐 Authentication & Security
 
----
-
-## 🛠️ Tech Stack
-
-| Layer        | Technology               |
-|--------------|--------------------------|
-| Runtime      | Node.js (ES Modules)     |
-| Framework    | Express.js               |
-| Database     | MongoDB + Mongoose       |
-| Auth         | JSON Web Tokens (JWT)    |
-| Encryption   | bcryptjs                 |
-| Validation   | express-validator        |
-| Config       | dotenv                   |
+* JWT Authentication with 7-day token expiry
+* Password hashing using bcryptjs
+* Protected API routes
+* Secure middleware-based authorization
+* Environment variable configuration using dotenv
 
 ---
 
-## 📁 Project Structure
+## 👥 User Roles & Authorization
 
-```
+* 👨‍💼 Admin Role
+* 🧑‍💼 Manager Role
+* 👤 Normal User Role
+
+### Role Permissions
+
+| Role    | Access                              |
+| ------- | ----------------------------------- |
+| Admin   | Full access to all protected routes |
+| Manager | Management-level access             |
+| User    | Access only to personal tasks       |
+
+---
+
+## 🔢 Login Count Tracking
+
+* Tracks how many times a user logs in
+* Helps understand user activity
+* Stored in MongoDB user document
+
+---
+
+## ✅ Task Management Features
+
+* Create Tasks
+* Read Tasks
+* Update Tasks
+* Delete Tasks
+* User-specific task isolation
+* Status & Priority support
+
+---
+
+## 🧩 Validation & Middleware
+
+* express-validator integration
+* JWT verification middleware
+* Admin-only middleware
+* Role authorization middleware
+* Error handling utilities
+
+---
+
+# 🛠️ Tech Stack
+
+| Layer          | Technology        |
+| -------------- | ----------------- |
+| Runtime        | Node.js           |
+| Framework      | Express.js        |
+| Database       | MongoDB           |
+| ODM            | Mongoose          |
+| Authentication | JWT               |
+| Encryption     | bcryptjs          |
+| Validation     | express-validator |
+| Environment    | dotenv            |
+
+---
+
+# 📁 Project Structure
+
+```bash id="j9snk3"
 Task Management App/
-├── index.js                        # App entry point & route definitions
-├── config/
-│   └── db.js                       # MongoDB connection setup
+│
 ├── app/
 │   ├── controllers/
-│   │   ├── user-controller.js      # Register, Login, Profile
-│   │   └── tasks-controller.js     # CRUD operations for tasks
-│   ├── models/
-│   │   ├── user.js                 # User schema
-│   │   └── task.js                 # Task schema
+│   │   ├── user-controller.js
+│   │   └── tasks-controller.js
+│   │
 │   ├── middleware/
-│   │   └── authentication.js       # JWT verification middleware
+│   │   ├── authentication.js
+│   │   ├── adminOnly.js
+│   │   └── authorizeUser.js
+│   │
+│   ├── models/
+│   │   ├── user.js
+│   │   └── task.js
+│   │
 │   ├── validation/
-│   │   └── user.js                 # Register & Login validation schemas
+│   │   └── user.js
+│   │
 │   └── helpers/
-│       └── errorFormatter.js       # Error formatting utility
-└── .env                            # Environment variables
+│       └── errorFormatter.js
+│
+├── config/
+│   └── db.js
+│
+├── index.js
+├── .env
+├── package.json
+└── README.md
 ```
 
 ---
 
-## ⚙️ Getting Started
+# ⚙️ Installation & Setup
 
-### Prerequisites
-- Node.js v18+
-- MongoDB (local or Atlas)
+## 1️⃣ Clone Repository
 
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/task-management-api.git
-cd task-management-api
-
-# Install dependencies
-npm install
-
-# Create your .env file
-cp .env.example .env
+```bash id="fj5sok"
+git clone https://github.com/Joyalquadras/task-management-rest-api.git
+cd task-management-rest-api
 ```
 
-### Environment Variables
+---
 
-Create a `.env` file in the root directory:
+## 2️⃣ Install Dependencies
+
+```bash id="4o5st8"
+npm install
+```
+
+---
+
+## 3️⃣ Configure Environment Variables
+
+Create a `.env` file in the root folder:
 
 ```env
-DB_URL=mongodb://127.0.0.1:27017/task-management
-JWT_SECRET=your_strong_secret_here
+DB_URL=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=3347
 ```
 
-> ⚠️ Never commit your `.env` file. It's already in `.gitignore`.
+---
 
-### Run the Server
+## 4️⃣ Run Server
 
-```bash
+```bash id="go0z9j"
 node index.js
-# Server runs on http://localhost:3347
+```
+
+Server runs on:
+
+```bash id="hqrx31"
+http://localhost:3347
 ```
 
 ---
 
-## 📡 API Endpoints
+# 📡 API Endpoints
 
-### Auth Routes
+# 🔐 Authentication Routes
 
-| Method | Endpoint               | Description              | Auth Required |
-|--------|------------------------|--------------------------|---------------|
-| POST   | `/api/users/register`  | Register a new user      | ❌            |
-| POST   | `/api/users/login`     | Login and receive token  | ❌            |
-| GET    | `/api/users/profile`   | Get logged-in user info  | ✅            |
-
-### Task Routes
-
-| Method | Endpoint           | Description              | Auth Required |
-|--------|--------------------|--------------------------|---------------|
-| GET    | `/api/tasks`       | Get all tasks (yours)    | ✅            |
-| POST   | `/api/tasks`       | Create a new task        | ✅            |
-| GET    | `/api/tasks/:id`   | Get a task by ID         | ✅            |
-| PUT    | `/api/tasks/:id`   | Update a task by ID      | ✅            |
-| DELETE | `/api/tasks/:id`   | Delete a task by ID      | ✅            |
+| Method | Endpoint              | Description      |
+| ------ | --------------------- | ---------------- |
+| POST   | `/api/users/register` | Register User    |
+| POST   | `/api/users/login`    | Login User       |
+| GET    | `/api/users/profile`  | Get User Profile |
 
 ---
 
-## 🔑 Authentication
+# ✅ Task Routes
 
-All protected routes require a JWT token in the `Authorization` header:
+| Method | Endpoint         | Description    |
+| ------ | ---------------- | -------------- |
+| GET    | `/api/tasks`     | Get All Tasks  |
+| POST   | `/api/tasks`     | Create Task    |
+| GET    | `/api/tasks/:id` | Get Task By ID |
+| PUT    | `/api/tasks/:id` | Update Task    |
+| DELETE | `/api/tasks/:id` | Delete Task    |
 
-```
-Authorization: <your_token_here>
+---
+
+# 🔑 Authorization Header
+
+Protected routes require JWT token:
+
+```bash id="0p5g2f"
+Authorization: <token>
 ```
 
 ---
 
-## 📦 Request & Response Examples
+# 📦 Sample Request
 
-### Register
+## Register User
 
-**POST** `/api/users/register`
+### POST `/api/users/register`
+
+```json
+{
+  "email": "joyal@example.com",
+  "password": "Secure@123",
+  "role": "Manager"
+}
+```
+
+---
+
+## Login User
+
+### POST `/api/users/login`
 
 ```json
 {
@@ -140,81 +218,94 @@ Authorization: <your_token_here>
 }
 ```
 
-**Response**
-```json
-{
-  "data": { "email": "joyal@example.com", "_id": "..." },
-  "message": "User registered successfully"
-}
-```
-
 ---
 
-### Login
+## Create Task
 
-**POST** `/api/users/login`
-
-```json
-{
-  "email": "joyal@example.com",
-  "password": "Secure@123"
-}
-```
-
-**Response**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
----
-
-### Create Task
-
-**POST** `/api/tasks`
+### POST `/api/tasks`
 
 ```json
 {
-  "title": "Complete project report",
-  "description": "Finish the capstone project documentation",
+  "title": "Finish Backend Project",
+  "description": "Complete authorization middleware",
   "status": "In Progress",
   "priority": "High"
 }
 ```
 
-**Task Status options:** `Pending` | `In Progress` | `Completed`
+---
 
-**Task Priority options:** `Low` | `Medium` | `High`
+# 🛡️ Security Middleware
+
+## Authentication Middleware
+
+Verifies JWT token and authenticates users.
+
+```bash id="x9u4en"
+authentication.js
+```
 
 ---
 
-## 🧪 Testing with Postman
+## Admin Middleware
 
-1. Register a user via `POST /api/users/register`
-2. Login via `POST /api/users/login` — copy the token
-3. Add the token to the `Authorization` header for all task requests
-4. Test all CRUD endpoints
+Restricts routes to admin users only.
 
----
-
-## 🔮 Future Improvements
-
-- [ ] Add task due dates and reminders
-- [ ] Pagination for task listing
-- [ ] Task categories/tags
-- [ ] Frontend (React) integration
-- [ ] Deploy to Railway / Render
+```bash id="7lw5w4"
+adminOnly.js
+```
 
 ---
 
-## 👨‍💻 Author
+## Authorization Middleware
 
-**Joyal** — Final Year B.Tech Student, Information Science  
-NMAM Institute of Technology, Nitte (Deemed to be University)
+Handles role-based route access.
+
+```bash id="g9b9vy"
+authorizeUser.js
+```
 
 ---
 
-## 📄 License
+# 🧪 Testing
 
-This project is open source and available under the [MIT License](LICENSE).
+You can test APIs using:
+
+* Postman
+* Thunder Client
+* Insomnia
+
+---
+
+# 🔮 Future Improvements
+
+* Task reminders
+* Due dates
+* Email notifications
+* Pagination
+* Frontend integration with React
+* Deployment on Render/Railway
+* Swagger API documentation
+
+---
+
+# 👨‍💻 Author
+
+## Joyal Quadras
+
+Final Year B.Tech Student
+Information Science Engineering
+NMAM Institute of Technology, Nitte
+
+---
+
+# 🌐 Connect With Me
+
+* GitHub: https://github.com/Joyalquadras
+* LinkedIn: https://www.linkedin.com/in/joyal-quadras-499991324/
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
